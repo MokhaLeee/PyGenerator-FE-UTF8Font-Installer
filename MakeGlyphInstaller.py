@@ -52,6 +52,7 @@ def InitInstaller(installer_dir):
 	# make main file
 	with open(main_installer, 'w') as fp_main:
 		
+		fp_main.write("\nPUSH\n\n")
 		fp_main.write("#define __DEBUG__\n\n\n")
 		
 		fp_main.write("// Start of font glyphes space\n")
@@ -87,6 +88,7 @@ def InitInstaller(installer_dir):
 		fp_main.write("#ifdef FreeSpaceFontEnd\n")
 		fp_main.write("\tASSERT (FreeSpaceFontEnd - CURRENTOFFSET)\n")
 		fp_main.write("#endif // FreeSpaceFontEnd\n")
+		fp_main.write("\nPOP\n\n")
 		
 	with open(font_installer, 'w') as fp_font:
 		
@@ -364,7 +366,7 @@ def main():
 	patch_file = installer_dir + "/FontPatches.event"
 	
 	# as input a .gba file
-	if not len(sys.argv) == 2:
+	if len(sys.argv) < 2:
 		sys.exit("please input a gba file to make FontTable!")
 
 	
@@ -374,6 +376,14 @@ def main():
 		
 	os.mkdir(installer_dir)
 	
+	
+	# make file "FontTableDef.event"
+	MakeFontTable( sys.argv[1], table_file )
+	
+	if len(sys.argv) > 2:
+		sys.exit("only updated TableDef!")
+		
+		
 	# make file "FontInstaller.event"
 	InitInstaller(installer_dir)
 	
@@ -399,8 +409,7 @@ def main():
 			if  config_flag[i+0x100] == 1 :
 				fp.write("#define ___Item_" + "{:04X}".format(i) + "_\n")
 	
-	# make file "FontTableDef.event"
-	MakeFontTable( sys.argv[1], table_file )
+	
 	
 	# make patches
 	MakeCnFontPatches(patch_file)
