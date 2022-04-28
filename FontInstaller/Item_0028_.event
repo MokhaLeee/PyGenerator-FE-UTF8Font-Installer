@@ -1,5 +1,0 @@
-// Sub Font Installer
-ALIGN 4
-Fonts(0x0067, 9)
-	#incbin "../FontData/FontItem木.fefont"
-
